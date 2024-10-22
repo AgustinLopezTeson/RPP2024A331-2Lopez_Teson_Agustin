@@ -1,0 +1,549 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="form-container" id="formDatos">
+
+        <h1 class="tituloDatos">Form Datos</h1>
+
+        <form>
+            <div>
+                Filtrar por:
+                <select id="filter" onchange="filtrarTablaSelect()">
+                    <option value="todos">Todos</option>
+                    <option value="futbolista">Futbolista</option>
+                    <option value="profesional">Profesional</option>
+                </select>
+            </div>
+
+            <div>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> ID</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Nombre</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Apellido</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Edad</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Tipo</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Equipo</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Posicion</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> CantGoles</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Titulo</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> Facultad</label>
+                <label><input type="checkbox" checked onchange="filtrarTablaCheck()"> AñoGrad</label>
+            </div>
+
+            <div>
+                Calcular Edad Promedio: <input type="text" id="edadMax">
+                <button type="button" onclick="calcularEdad()">Calcular</button>
+            </div>
+
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th onclick="ordenarTabla(0)">ID</th>
+                        <th onclick="ordenarTabla(1)">Nombre</th>
+                        <th onclick="ordenarTabla(2)">Apellido</th>
+                        <th onclick="ordenarTabla(3)">Edad</th>
+                        <th onclick="ordenarTabla(4)">Tipo</th>
+                        <th onclick="ordenarTabla(5)">Equipo</th>
+                        <th onclick="ordenarTabla(6)">Posicion</th>
+                        <th onclick="ordenarTabla(7)">CantGoles</th>
+                        <th onclick="ordenarTabla(8)">Titulo</th>
+                        <th onclick="ordenarTabla(9)">Facultad</th>
+                        <th onclick="ordenarTabla(10)">AñoGrad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="botonAgregarDatos">
+                <button type="button" id="agregarButton">Agregar</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="form-container" id="formAbm">
+
+        <h1>Formulario ABM</h1>
+
+        <form id="data-form">
+            <div>
+                <label>ID: <input type="text" id="id" required disabled></label>
+            </div>
+            <div>
+                <label>Nombre: <input type="text" id="nombre" required></label>
+            </div>
+            <div>
+                <label>Apellido: <input type="text" id="apellido" required></label>
+            </div>
+            <div>
+                <label>Edad: <input type="text" id="edad" required></label>
+            </div>
+            <div>
+                <label>Tipo: <select id="tipo" required>
+                        <option value="">Seleccione Tipo</option>
+                        <option value="Futbolista">Futbolista</option>
+                        <option value="Profesional">Profesional</option>
+                    </select></label>
+            </div>
+            <div>
+                <label>Equipo: <input type="text" id="equipo">*</label>
+            </div>
+            <div>
+                <label>Posicion: <input type="text" id="posicion">*</label>
+            </div>
+            <div>
+                <label>CantGoles: <input type="text" id="cantGoles">*</label>
+            </div>
+            <div>
+                <label>Titulo: <input type="text" id="titulo">*</label>
+            </div>
+            <div>
+                <label>Facultad: <input type="text" id="facultad">*</label>
+            </div>
+            <div>
+                <label>AñoGrad: <input type="text" id="anoGraduacion">*</label>
+            </div>
+            <div>
+                <button type="button" onclick="agregar()" id="btnAgregar">Agregar</button>
+                <button type="button" onclick="editar()" id="btnModificar">Modificar</button>
+                <button type="button" onclick="eliminar()" id="btnEliminar">Eliminar</button>
+                <button type="button" onclick="cancelar()" id="btnCancelar">Cancelar</button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        class Persona {
+            id = 0;
+            nombre = "";
+            apellido = 0;
+            edad = 0;
+            constructor(id, nombre, apellido, edad) {
+                this.id = id;
+                this.nombre = nombre;
+                this.apellido = apellido;
+                this.edad = edad;
+            }
+
+            toString() {
+                return `ID: ${this.id}, Nombre: ${this.nombre}, Apellido: ${this.apellido}, Edad: ${this.edad}`;
+            }
+        }
+
+        class Futbolista extends Persona {
+            equipo = "";
+            posicion = "";
+            cantidadGoles = 0;
+            titulo = "No aplica";
+            facultad = "No aplica";
+            anoGraduacion = "";
+            constructor(id, nombre, apellido, edad, equipo, posicion, cantidadGoles) {
+                super(id, nombre, apellido, edad);
+
+                this.equipo = equipo;
+                this.posicion = posicion;
+                this.cantidadGoles = cantidadGoles;
+                this.titulo = "No aplica";
+                this.facultad = "No aplica";
+                this.anoGraduacion = "No aplica";
+            }
+
+            toString() {
+                return super.toString() + `Equipo: ${this.equipo}, Posicion: ${this.posicion},Cantidad Goles: ${this.cantidadGoles}`;
+            }
+        }
+
+
+        class Profesional extends Persona {
+            titulo = "";
+            facultad = "";
+            anoGraduacion = 0;
+            constructor(id, nombre, apellido, edad, titulo, facultad, anoGraduacion) {
+                super(id, nombre, apellido, edad);
+                this.titulo = titulo;
+                this.facultad = facultad;
+                this.anoGraduacion = anoGraduacion;
+                this.posicion = "No aplica";
+                this.equipo = "No aplica";
+                this.cantidadGoles = "No aplica";
+            }
+
+            toString() {
+                return super.toString() + `, Titulo: ${this.titulo}, Facultadad: ${this.facultad}, Año graduacion: ${this.anoGraduacion}`;
+            }
+        }
+
+        var personaDatos = JSON.parse('[{"id":1, "nombre":"Marcelo", "apellido":"Luque", "edad":45, "titulo":"Ingeniero", "facultad":"UTN","anoGraduacion":2002},{"id":2, "nombre":"Ramiro", "apellido":"Escobar", "edad":35, "titulo":"Medico","facultad":"UBA", "anoGraduacion":2012},{"id":3, "nombre":"Facundo", "apellido":"Cairo", "edad":30,"titulo":"Abogado", "facultad":"UCA", "anoGraduacion":2017},{"id":4, "nombre":"Fernando", "apellido":"Nieto","edad":18, "equipo":"Independiente", "posicion":"Delantero", "cantidadGoles":7},{"id":5, "nombre":"Manuel","apellido":"Loza", "edad":20, "equipo":"Racing", "posicion":"Volante", "cantidadGoles":2},{"id":6, "nombre":"Nicolas","apellido":"Serrano", "edad":23, "equipo":"Boca", "posicion":"Arquero", "cantidadGoles":0}]');
+
+        var arrayPersonas = personaDatos.map(persona => {
+            if (persona.titulo !== undefined && persona.facultad !== undefined) {
+                return new Profesional(persona.id, persona.nombre, persona.apellido, persona.edad, persona.titulo, persona.facultad, persona.anoGraduacion);
+
+            } else {
+                return new Futbolista(persona.id, persona.nombre, persona.apellido, persona.edad, persona.equipo, persona.posicion, persona.cantidadGoles);
+            }
+        });
+
+        console.log(arrayPersonas);
+
+        function cargarTabla() {
+
+            const tabla = document.querySelector('#data-table tbody');
+            tabla.innerHTML = '';
+            arrayPersonas.forEach(persona => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${persona.id}</td>
+                        <td>${persona.nombre}</td>
+                        <td>${persona.apellido}</td>
+                        <td>${persona.edad} </td>
+                        <td>${persona.constructor.name}</td>
+                        <td>${persona.equipo}</td>
+                        <td>${persona.posicion}</td>
+                        <td>${persona.cantidadGoles} </td>
+                        <td>${persona.titulo}</td>
+                        <td>${persona.facultad}</td>
+                        <td>${persona.anoGraduacion}</td>
+                    `;    
+
+                row.addEventListener('dblclick', () => mostrarFormularioABM(row));
+                document.getElementById('agregarButton').addEventListener('click', () => {
+                    mostrarFormularioABM();
+                });
+                tabla.appendChild(row);
+            });
+        }
+
+        window.onload = cargarTabla;
+
+        function calcularEdad() {
+
+            const tabla = document.getElementById('data-table');
+            const rows = Array.from(tabla.getElementsByTagName('tr')).slice(1);
+            const filtroSeleccionado = document.getElementById('filter').value;
+
+            const filasFiltradas = rows.filter(row => {
+                const celda = row.getElementsByTagName('td');
+                if (celda.length < 9) {
+                    return false;
+                }
+
+                const tipoProfesional = celda[4].textContent.trim();
+                return filtroSeleccionado === 'todos' ||
+                    (filtroSeleccionado === 'futbolista' && tipoProfesional === 'Futbolista') ||
+                    (filtroSeleccionado === 'profesional' && tipoProfesional === 'Profesional');
+            });
+
+            const edades = filasFiltradas.map(row => {
+                const celda = row.getElementsByTagName('td');
+                const edad = parseInt(celda[3].textContent) || 0;
+                return edad;
+            });
+
+
+            const totalEdades = edades.reduce((acc, edad) => acc + edad, 0);
+            const promedio = (totalEdades / edades.length).toFixed(2);
+
+
+            document.getElementById('edadMax').value = `${promedio}`;
+
+
+        }
+
+        function filtrarTablaCheck() {
+            const check = document.querySelectorAll('input[type="checkbox"]');
+            const tabla = document.getElementById('data-table');
+            const rows = tabla.getElementsByTagName('tr');
+            const cabecera = rows[0].getElementsByTagName('th');
+
+            const columnas = Array.from(check).map((checkbox, index) => checkbox.checked ? index : -1).filter(index => index !== -1);
+
+            for (let i = 1; i < rows.length; i++) {
+                const celda = rows[i].getElementsByTagName('td');
+                for (let j = 0; j < celda.length; j++) {
+                    celda[j].style.display = columnas.includes(j) ? '' : 'none';
+                }
+            }
+
+            for (let j = 0; j < cabecera.length; j++) {
+                cabecera[j].style.display = columnas.includes(j) ? '' : 'none';
+            }
+        }
+
+        function filtrarTablaSelect() {
+            const filtro = document.getElementById('filter').value;
+            const tabla = document.getElementById('data-table');
+            const rows = tabla.getElementsByTagName('tr');
+            for (let i = 1; i < rows.length; i++) {
+                const celda = rows[i].getElementsByTagName('td');
+                const tipo = celda[4].textContent.toLowerCase();
+                rows[i].style.display = (filtro === 'todos' || tipo === filtro) ? '' : 'none';
+            }
+        }
+
+
+        function mostrarFormularioABM(row = null) {
+
+            document.getElementById('data-table').style.display = 'none';
+            document.getElementById('formAbm').style.display = 'block';
+
+
+            if (row) {
+                const celdas = row.getElementsByTagName('td');
+                document.getElementById('id').value = celdas[0].textContent;
+                document.getElementById('nombre').value = celdas[1].textContent;
+                document.getElementById('apellido').value = celdas[2].textContent;
+                document.getElementById('edad').value = celdas[3].textContent;
+                document.getElementById('tipo').value = celdas[4].textContent;
+                document.getElementById('equipo').value = celdas[5].textContent;
+                document.getElementById('posicion').value = celdas[6].textContent;
+                document.getElementById('cantGoles').value = celdas[7].textContent;
+                document.getElementById('titulo').value = celdas[8].textContent;
+                document.getElementById('facultad').value = celdas[9].textContent;
+                document.getElementById('anoGraduacion').value = celdas[10].textContent;
+
+                document.getElementById('btnModificar').style.display = 'block';
+                document.getElementById('btnEliminar').style.display = 'block';
+                document.getElementById('btnAgregar').style.display = "none";
+                document.getElementById("agregarButton").style.display = "none";
+
+            } else {
+                document.getElementById('nombre').value = '';
+                document.getElementById('apellido').value = '';
+                document.getElementById('edad').value = '';
+                document.getElementById('tipo').value = '';
+                document.getElementById('equipo').value = '';
+                document.getElementById('posicion').value = '';
+                document.getElementById('cantGoles').value = '';
+                document.getElementById('titulo').value = '';
+                document.getElementById('facultad').value = '';
+                document.getElementById('anoGraduacion').value = '';
+                document.getElementById('btnModificar').style.display = 'none';
+                document.getElementById('btnEliminar').style.display = 'none';
+                document.getElementById('btnAgregar').style.display = 'flex';
+                document.getElementById("agregarButton").style.display = "none";
+
+            }
+        }
+
+
+        function agregar() {
+
+
+            const ids = arrayPersonas.map(persona => persona.id);
+            const nuevoId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const edad = document.getElementById('edad').value;
+            const tipo = document.getElementById('tipo').value;
+            const equipo = document.getElementById('equipo').value;
+            const posicion = document.getElementById('posicion').value;
+            const cantidadGoles = document.getElementById('cantGoles').value;
+            const titulo = document.getElementById('titulo').value;
+            const facultad = document.getElementById('facultad').value;
+            const anoGraduacion = document.getElementById('anoGraduacion').value;
+
+
+            const tableBody = document.querySelector('#data-table tbody');
+
+            let nuevopersona;
+            if (tipo === 'Futbolista') {
+                nuevapersona = new Futbolista(nuevoId, nombre, apellido, edad, equipo, posicion, cantidadGoles);
+            } else {
+                nuevapersona = new Profesional(nuevoId, nombre, apellido, edad, titulo, facultad, anoGraduacion);
+            }
+
+
+            arrayPersonas.push(nuevapersona);
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                        <td>${nuevoId}</td>
+                        <td>${nuevapersona.nombre}</td>
+                        <td>${nuevapersona.apellido}</td>
+                        <td>${nuevapersona.edad}</td>
+                        <td>${nuevapersona.constructor.name}</td>
+                        <td>${nuevapersona.equipo}</td>
+                        <td>${nuevapersona.posicion}</td>
+                        <td>${nuevapersona.cantidadGoles}</td>
+                        <td>${nuevapersona.titulo}</td>
+                        <td>${nuevapersona.facultad}</td>
+                        <td>${nuevapersona.anoGraduacion}</td>
+                    `;
+            tableBody.appendChild(row);
+            row.addEventListener('dblclick', () => mostrarFormularioABM(row));
+            document.getElementById('data-form').reset();
+            document.getElementById("data-table").style.display = "block";
+            document.getElementById('formAbm').style.display = 'none';
+            document.getElementById("agregarButton").style.display = "block";
+        }
+
+        function editar() {
+            const id = document.getElementById('id').value;
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const edad = document.getElementById('edad').value;
+            const tipo = document.getElementById('tipo').value;
+            const equipo = document.getElementById('equipo').value;
+            const posicion = document.getElementById('posicion').value;
+            const cantidadGoles = document.getElementById('cantGoles').value;
+            const titulo = document.getElementById('titulo').value;
+            const facultad = document.getElementById('facultad').value;
+            const anoGraduacion = document.getElementById('anoGraduacion').value;
+
+            const tabla = document.querySelector('#data-table tbody');
+            const filas = Array.from(tabla.getElementsByTagName('tr'));
+
+
+            const filaAModificar = filas.find(fila => {
+                const celdas = fila.getElementsByTagName('td');
+                return celdas[0].textContent === id;
+            });
+
+            if (filaAModificar) {
+
+                filaAModificar.innerHTML = `
+                        <td>${id}</td>
+                        <td>${nombre}</td>
+                        <td>${apellido}</td>
+                        <td>${edad}</td>
+                        <td>${tipo}</td>
+                        <td>${equipo}</td>
+                        <td>${posicion}</td>
+                        <td>${cantidadGoles}</td>
+                        <td>${titulo}</td>
+                        <td>${facultad}</td>
+                        <td>${anoGraduacion}</td>
+                    `;
+
+                guardarTabla();
+                cancelar();
+            }
+          
+
+        }
+
+        function cancelar() {
+            document.getElementById('formAbm').style.display = 'none';
+            document.getElementById('data-table').style.display = 'block';
+            document.getElementById("agregarButton").style.display = "block";
+        }
+
+        function eliminar() {
+            const id = document.getElementById('id').value;
+            const tabla = document.querySelector('#data-table tbody');
+            const filas = Array.from(tabla.getElementsByTagName('tr'));
+
+
+            const filaAEliminar = filas.find(fila => {
+                const celdas = fila.getElementsByTagName('td');
+                return celdas[0].textContent === id;
+            });
+
+            if (filaAEliminar) {
+                tabla.removeChild(filaAEliminar);
+
+                cancelar();
+            }
+        }
+
+        function guardarTabla() {
+            const tabla = document.querySelector('#data-table tbody');
+            const filas = Array.from(tabla.getElementsByTagName('tr'));
+            const datos = filas.map(fila => {
+                const celdas = fila.getElementsByTagName('td');
+                return {
+                    id: celdas[0].textContent,
+                    nombre: celdas[1].textContent,
+                    apellido: celdas[2].textContent,
+                    edad: celdas[3].textContent,
+                    tipo: celdas[4].textContent,
+                    equipo: celdas[5].textContent,
+                    posicion: celdas[6].textContent,
+                    cantidadGoles: celdas[7].textContent,
+                    titulo: celdas[8].textContent,
+                    facultad: celdas[9].textContent,
+                    anoGraduacion: celdas[10].textContent
+                };
+            });
+
+            localStorage.setItem('tablaDatos', JSON.stringify(datos));
+        }
+
+        function ordenarTabla(indice) {
+            const tabla = document.querySelector('#data-table tbody');
+
+
+            const personasOrdenadas = [...arrayPersonas].sort((a, b) => {
+
+                const claves = ['id', 'nombre', 'apellido', 'edad', 'tipo', 'equipo', 'posicion', 'cantGoles', 'titulo', 'facultad', 'anoGraduacion'];
+
+                var aValor = a[claves[indice]];
+                var bValor = b[claves[indice]];
+
+                if (aValor === "No aplica") {
+                    aValor = -1;
+                }
+
+                if (bValor === "No aplica") {
+                    bValor = -1;
+                }
+
+
+                if (aValor < bValor) return -1;
+                if (aValor > bValor) return 1;
+                return 0;
+            });
+
+            tabla.innerHTML = '';
+            personasOrdenadas.forEach(persona => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${persona.id}</td>
+                        <td>${persona.nombre}</td>
+                        <td>${persona.apellido}</td>
+                        <td>${persona.edad} </td>
+                        <td>${persona.constructor.name}</td>
+                        <td>${persona.equipo}</td>
+                        <td>${persona.posicion}</td>
+                        <td>${persona.cantidadGoles}</td>
+                        <td>${persona.titulo}</td>
+                        <td>${persona.facultad}</td>
+                        <td>${persona.anoGraduacion}</td>
+                    `;
+                tabla.appendChild(row);
+                row.addEventListener('dblclick', () => mostrarFormularioABM(row));
+            });
+
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
