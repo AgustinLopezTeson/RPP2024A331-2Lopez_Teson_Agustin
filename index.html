@@ -100,7 +100,7 @@
                 <label>Edad: <input type="text" id="edad" required></label>
             </div>
             <div>
-                <label>Tipo: <select id="tipo" required>
+                <label>Tipo: <select id="tipo" required onchange="deshabilitarPorTipo()">
                         <option value="">Seleccione Tipo</option>
                         <option value="Futbolista">Futbolista</option>
                         <option value="Profesional">Profesional</option>
@@ -206,7 +206,6 @@
             }
         });
 
-        console.log(arrayPersonas);
 
         function cargarTabla() {
 
@@ -226,7 +225,7 @@
                         <td>${persona.titulo}</td>
                         <td>${persona.facultad}</td>
                         <td>${persona.anoGraduacion}</td>
-                    `;    
+                    `;
 
                 row.addEventListener('dblclick', () => mostrarFormularioABM(row));
                 document.getElementById('agregarButton').addEventListener('click', () => {
@@ -356,14 +355,37 @@
             const nuevoId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
             const nombre = document.getElementById('nombre').value;
             const apellido = document.getElementById('apellido').value;
-            const edad = document.getElementById('edad').value;
+            const edad = parseInt(document.getElementById('edad').value);
             const tipo = document.getElementById('tipo').value;
             const equipo = document.getElementById('equipo').value;
             const posicion = document.getElementById('posicion').value;
-            const cantidadGoles = document.getElementById('cantGoles').value;
+            const cantidadGoles = parseInt(document.getElementById('cantGoles').value);
             const titulo = document.getElementById('titulo').value;
             const facultad = document.getElementById('facultad').value;
-            const anoGraduacion = document.getElementById('anoGraduacion').value;
+            const anoGraduacion = parseInt(document.getElementById('anoGraduacion').value);
+
+
+            if (!nombre || !apellido || isNaN(edad) || edad <= 15) {
+                alert('Por favor, completa todos los campos y asegúrate de que la edad sea mayor a 15 años.');
+                return;
+            }
+
+            if(tipo == 'Profesional')
+            {
+                if (!titulo || !facultad && (anoGraduacion <= 1950)) {
+                alert('El año de graduación debe ser mayor a 1950 y los campos titulo y facultad tiene que estar completos.');
+                return;
+            }
+            }
+
+            if(tipo=="Futbolista")
+            {
+                if (!equipo || !posicion  || (isNaN(cantidadGoles) || cantidadGoles < 0)) {
+                alert('La cantidad de goles no puede ser menor a 0 y los campos equipo y posicion tiene que estar completos.');
+                return;
+            }
+            }
+
 
 
             const tableBody = document.querySelector('#data-table tbody');
@@ -404,14 +426,37 @@
             const id = document.getElementById('id').value;
             const nombre = document.getElementById('nombre').value;
             const apellido = document.getElementById('apellido').value;
-            const edad = document.getElementById('edad').value;
+            const edad = parseInt(document.getElementById('edad').value);
             const tipo = document.getElementById('tipo').value;
             const equipo = document.getElementById('equipo').value;
             const posicion = document.getElementById('posicion').value;
-            const cantidadGoles = document.getElementById('cantGoles').value;
+            const cantidadGoles = parseInt(document.getElementById('cantGoles').value);
             const titulo = document.getElementById('titulo').value;
             const facultad = document.getElementById('facultad').value;
-            const anoGraduacion = document.getElementById('anoGraduacion').value;
+            const anoGraduacion = parseInt(document.getElementById('anoGraduacion').value);
+
+            if (!nombre || !apellido || isNaN(edad) || edad <= 15) {
+                alert('Por favor, completa todos los campos y asegúrate de que la edad sea mayor a 15 años.');
+                return;
+            }
+
+            if(tipo == 'Profesional')
+            {
+                if (!titulo || !facultad && (anoGraduacion <= 1950)) {
+                alert('El año de graduación debe ser mayor a 1950 y los campos titulo y facultad tiene que estar completos.');
+                return;
+            }
+            }
+
+            if(tipo=="Futbolista")
+            {
+                if (!equipo || !posicion  || (isNaN(cantidadGoles) || cantidadGoles < 0)) {
+                alert('La cantidad de goles no puede ser menor a 0 y los campos equipo y posicion tiene que estar completos.');
+                return;
+            }
+            }
+
+
 
             const tabla = document.querySelector('#data-table tbody');
             const filas = Array.from(tabla.getElementsByTagName('tr'));
@@ -438,10 +483,10 @@
                         <td>${anoGraduacion}</td>
                     `;
 
-                guardarTabla();
+                
                 cancelar();
             }
-          
+
 
         }
 
@@ -469,7 +514,7 @@
             }
         }
 
-        function guardarTabla() {
+        /*function guardarTabla() {
             const tabla = document.querySelector('#data-table tbody');
             const filas = Array.from(tabla.getElementsByTagName('tr'));
             const datos = filas.map(fila => {
@@ -490,7 +535,7 @@
             });
 
             localStorage.setItem('tablaDatos', JSON.stringify(datos));
-        }
+        }*/
 
         function ordenarTabla(indice) {
             const tabla = document.querySelector('#data-table tbody');
@@ -539,6 +584,35 @@
 
 
         }
+
+
+        function deshabilitarPorTipo() {
+        const tipo = document.getElementById('tipo').value;
+
+        if (tipo === 'Futbolista') {
+            document.getElementById('equipo').disabled = false;
+            document.getElementById('posicion').disabled = false;
+            document.getElementById('cantGoles').disabled = false;
+            document.getElementById('titulo').disabled = true;
+            document.getElementById('facultad').disabled = true;
+            document.getElementById('anoGraduacion').disabled = true;
+        } else if (tipo === 'Profesional') {
+            document.getElementById('equipo').disabled = true;
+            document.getElementById('posicion').disabled = true;
+            document.getElementById('cantGoles').disabled = true;
+            document.getElementById('titulo').disabled = false;
+            document.getElementById('facultad').disabled = false;
+            document.getElementById('anoGraduacion').disabled = false;
+        } else {
+            
+            document.getElementById('equipo').disabled = false;
+            document.getElementById('posicion').disabled = false;
+            document.getElementById('cantGoles').disabled = false;
+            document.getElementById('titulo').disabled = false;
+            document.getElementById('facultad').disabled = false;
+            document.getElementById('anoGraduacion').disabled = false;
+        }
+    }
 
 
     </script>
